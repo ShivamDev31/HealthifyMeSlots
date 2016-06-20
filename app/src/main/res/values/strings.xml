@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HealthifyMeDemo</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="error_while_fetching_slots">Error while fetching slots. Pull down to refresh.</string>
+</resources>
