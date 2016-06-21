@@ -4,22 +4,47 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.shivamdev.healthifymedemo.fragments.BookingSlotsFragment;
+import com.shivamdev.healthifymedemo.network.data.SlotsData;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Shivam on 20-06-2016.
  */
 public class DateSlotsAdapter extends FragmentPagerAdapter {
 
+    List<String> dateSlots;
+    List<SlotsData.Slots> slots;
+
     public DateSlotsAdapter(FragmentManager fm) {
         super(fm);
+        dateSlots = new ArrayList<>();
+        slots = new ArrayList<>();
+    }
+
+    public void refreshSlots(List<String> dates, List<SlotsData.Slots> slotsData) {
+        dateSlots.clear();
+        dateSlots.addAll(dates);
+        slots.clear();
+        slots.addAll(slotsData);
+        notifyDataSetChanged();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return null;
+        BookingSlotsFragment slotsFragment = BookingSlotsFragment.newInstance(position, slots);
+        return slotsFragment;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return dateSlots.size();
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+       return  dateSlots.get(position);
     }
 }

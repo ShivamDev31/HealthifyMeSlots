@@ -14,16 +14,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.shivamdev.healthifymedemo.R;
+import com.shivamdev.healthifymedemo.fragments.adapters.DateSlotsAdapter;
+import com.shivamdev.healthifymedemo.main.CommonUtils;
 import com.shivamdev.healthifymedemo.main.Constants;
 import com.shivamdev.healthifymedemo.main.LogToast;
 import com.shivamdev.healthifymedemo.main.MainApplication;
+import com.shivamdev.healthifymedemo.network.data.SlotsData;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -60,6 +62,8 @@ public class BookingFragment extends Fragment {
     private ViewPager vpDates;
     private TextView tvMonth;
 
+    private DateSlotsAdapter adapter;
+
     public static BookingFragment newInstance() {
         BookingFragment fragment = new BookingFragment();
         Bundle args = new Bundle();
@@ -88,6 +92,10 @@ public class BookingFragment extends Fragment {
         srlRefresh.setColorSchemeColors(getActivity().getResources().getColor(R.color.color_accent));
         srlRefresh.setOnRefreshListener(new RefreshData());
         pbLoader = (ProgressBar) view.findViewById(R.id.pb_loader);
+        adapter = new DateSlotsAdapter(getChildFragmentManager());
+
+        vpDates.setAdapter(adapter);
+        tlDates.setupWithViewPager(vpDates);
 
         getSlotsFromServer();
     }
@@ -105,7 +113,7 @@ public class BookingFragment extends Fragment {
         Subscription subs = MainApplication.getInstance().component().getHealthifyMeApi().getSlots(query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<JSONObject>() {
+                .subscribe(new Subscriber<SlotsData>() {
                     @Override
                     public void onCompleted() {
 
@@ -118,28 +126,33 @@ public class BookingFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(JSONObject json) {
+                    public void onNext(SlotsData json) {
                         showLoader(false);
-                        LogToast.log(TAG, "onNext: " + json.toString());
-                        try {
-                            JSONObject slots = json.getJSONObject("slots");
 
-                            Iterator dates = slots.keys();
-
-                            while (dates.hasNext()) {
-                                String date = (String) dates.next();
-                                JSONObject dateSlots = slots.getJSONObject(date);
-                                LogToast.log(TAG, "onNext: " + dateSlots);
-                                //JSONArray timings = dateSlots.getJSONArray(dateSlots.);
-                            }
-
-                            //HashMap<String, Object> map = GsonUtil.getInstance().fromJson(json.get("slots").toString(), HashMap.class);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        setDataOnUi(json);
                     }
                 });
         compositeSubscription.add(subs);
+    }
+
+    private void setDataOnUi(SlotsData json) {
+        Set<String> dateKeys = json.slots.keySet();
+
+        tvMonth.setText(CommonUtils.convertDateToString((String) dateKeys.toArray()[0], true));
+
+        List<String> dateSlots = new ArrayList<>();
+        List<SlotsData.Slots> slots = new ArrayList<>();
+
+        for (String key : json.slots.keySet()) {
+            dateSlots.add(CommonUtils.convertDateToString(key, false));
+        }
+
+        for (int i = 0; i < json.slots.size(); i++) {
+            slots.add(json.slots.get(i));
+        }
+
+        adapter.refreshSlots(dateSlots, slots);
+
     }
 
     private class RefreshData implements SwipeRefreshLayout.OnRefreshListener {
@@ -153,7 +166,6 @@ public class BookingFragment extends Fragment {
     private void showError(boolean isVisible) {
         if (isVisible) {
             llError.setVisibility(View.VISIBLE);
-            llBookingLayout.setVisibility(View.GONE);
             pbLoader.setVisibility(View.GONE);
         } else {
             llError.setVisibility(View.GONE);

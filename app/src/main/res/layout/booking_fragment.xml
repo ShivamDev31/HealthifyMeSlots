@@ -21,8 +21,9 @@
                 android:id="@+id/tv_month"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:gravity="center"
-                android:padding="18dp"
+                android:padding="15dp"
                 android:textSize="18sp"
                 tools:text="Month" />
 
@@ -30,9 +31,11 @@
                 android:id="@+id/tl_dates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:tabBackground="@color/white"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/basic_red"
-                app:tabMode="scrollable" />
+                app:tabMaxWidth="0dp"
+                app:tabMode="fixed" />
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/vp_slots"

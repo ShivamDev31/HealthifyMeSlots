@@ -2,7 +2,9 @@ package com.shivamdev.healthifymedemo.network.data;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Shivam on 20-06-2016.
@@ -10,18 +12,18 @@ import org.json.JSONObject;
 public class SlotsData {
 
     @SerializedName("slots")
-    public JSONObject slots;
+    public Map<String, Slots> slots = new HashMap<>();
 
     public static class Slots {
 
         @SerializedName("morning")
-        public String morning;
+        public List<TimingData> morning;
 
         @SerializedName("afternoon")
-        public String afternoon;
+        public List<TimingData> afternoon;
 
         @SerializedName("evening")
-        public String evening;
+        public List<TimingData> evening;
     }
 
     public class TimingData {
