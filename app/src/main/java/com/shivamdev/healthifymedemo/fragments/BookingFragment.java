@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
 import com.shivamdev.healthifymedemo.R;
 import com.shivamdev.healthifymedemo.fragments.adapters.DateSlotsAdapter;
 import com.shivamdev.healthifymedemo.main.CommonUtils;
@@ -32,6 +33,8 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+
+
 
 /**
  * Created by Shivam on 20-06-2016.
@@ -113,7 +116,7 @@ public class BookingFragment extends Fragment {
         Subscription subs = MainApplication.getInstance().component().getHealthifyMeApi().getSlots(query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<SlotsData>() {
+                .subscribe(new Subscriber<JsonElement>() {
                     @Override
                     public void onCompleted() {
 
@@ -126,10 +129,10 @@ public class BookingFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(SlotsData json) {
+                    public void onNext(JsonElement jsonObject) {
                         showLoader(false);
-
-                        setDataOnUi(json);
+                        String json = jsonObject.getAsString();
+                        LogToast.log(TAG, "onNext: " + json);
                     }
                 });
         compositeSubscription.add(subs);
