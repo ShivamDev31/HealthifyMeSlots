@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.shivamdev.healthifymedemo.fragments.BookingSlotsFragment;
 import com.shivamdev.healthifymedemo.main.CommonUtils;
-import com.shivamdev.healthifymedemo.network.data.MyData;
+import com.shivamdev.healthifymedemo.network.data.SlotsData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +16,14 @@ import java.util.List;
  */
 public class DateSlotsAdapter extends FragmentPagerAdapter {
 
-    List<MyData.Data> dateSlots;
+    List<SlotsData.Data> dateSlots;
 
     public DateSlotsAdapter(FragmentManager fm) {
         super(fm);
         dateSlots = new ArrayList<>();
     }
 
-    public void refreshSlots(List<MyData.Data> dates) {
+    public void refreshSlots(List<SlotsData.Data> dates) {
         dateSlots.clear();
         dateSlots.addAll(dates);
 

@@ -19,7 +19,7 @@ import com.shivamdev.healthifymedemo.main.CommonUtils;
 import com.shivamdev.healthifymedemo.main.Constants;
 import com.shivamdev.healthifymedemo.main.LogToast;
 import com.shivamdev.healthifymedemo.main.MainApplication;
-import com.shivamdev.healthifymedemo.network.data.MyData;
+import com.shivamdev.healthifymedemo.network.data.SlotsData;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -142,9 +142,9 @@ public class BookingFragment extends Fragment {
 
     private void setDataOnUi(String json) {
 
-        MyData myData = new MyData();
+        SlotsData myData = new SlotsData();
         myData.JsonParser(json);
-        List<MyData.Data> dates = myData.parseDates();
+        List<SlotsData.Data> dates = myData.parseDates();
 
         tvMonth.setText(CommonUtils.convertDateToString(dates.get(0).date, true));
 

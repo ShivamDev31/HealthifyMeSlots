@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemViewHolder;
 import com.shivamdev.healthifymedemo.R;
-import com.shivamdev.healthifymedemo.network.data.MyData;
+import com.shivamdev.healthifymedemo.network.data.SlotsData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +19,9 @@ import java.util.List;
  */
 public class SlotsAdapter extends AbstractExpandableItemAdapter<MyGroupViewHolder, MyChildViewHolder> {
 
-    private List<MyData.Slots> slotsData;
+    private List<SlotsData.Slots> slotsData;
 
-    public SlotsAdapter(List<MyData.Slots> slots) {
+    public SlotsAdapter(List<SlotsData.Slots> slots) {
         setHasStableIds(true);
         slotsData = new ArrayList<>();
         slotsData.addAll(slots);

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 import com.shivamdev.healthifymedemo.R;
 import com.shivamdev.healthifymedemo.fragments.adapters.SlotsAdapter;
-import com.shivamdev.healthifymedemo.network.data.MyData;
+import com.shivamdev.healthifymedemo.network.data.SlotsData;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,7 +28,7 @@ public class BookingSlotsFragment extends Fragment {
     private RecyclerView rvSlots;
     private SlotsAdapter adapter;
 
-        public static BookingSlotsFragment newInstance(int position, List<MyData.Slots> slots) {
+        public static BookingSlotsFragment newInstance(int position, List<SlotsData.Slots> slots) {
         BookingSlotsFragment fragment = new BookingSlotsFragment();
         Bundle args = new Bundle();
         args.putInt(POS, position);
@@ -48,7 +48,7 @@ public class BookingSlotsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        List<MyData.Slots> slots = (List<MyData.Slots>) getArguments().getSerializable(SLOTS);
+        List<SlotsData.Slots> slots = (List<SlotsData.Slots>) getArguments().getSerializable(SLOTS);
 
         rvSlots = (RecyclerView) view.findViewById(R.id.rv_slots);
         adapter = new SlotsAdapter(slots);
