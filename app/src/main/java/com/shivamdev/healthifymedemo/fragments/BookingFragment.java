@@ -58,7 +58,6 @@ public class BookingFragment extends Fragment {
     private ProgressBar pbLoader;
     private LinearLayout llError;
     private LinearLayout llBookingLayout;
-    private TextView tvErrorMessage;
     private TabLayout tlDates;
     private ViewPager vpDates;
     private TextView tvMonth;
@@ -88,7 +87,6 @@ public class BookingFragment extends Fragment {
         tvMonth = (TextView) view.findViewById(R.id.tv_month);
         llBookingLayout = (LinearLayout) view.findViewById(R.id.ll_booking);
         llError = (LinearLayout) view.findViewById(R.id.ll_error_layout);
-        tvErrorMessage = (TextView) view.findViewById(R.id.tv_error_text);
         srlRefresh = (SwipeRefreshLayout) view.findViewById(R.id.srl_refresh);
         srlRefresh.setColorSchemeColors(getActivity().getResources().getColor(R.color.color_accent));
         srlRefresh.setOnRefreshListener(new RefreshData());
@@ -175,9 +173,11 @@ public class BookingFragment extends Fragment {
         if (isVisible) {
             pbLoader.setVisibility(View.VISIBLE);
             llError.setVisibility(View.GONE);
+            srlRefresh.setRefreshing(false);
             llBookingLayout.setVisibility(View.GONE);
         } else {
             pbLoader.setVisibility(View.GONE);
+
             llBookingLayout.setVisibility(View.VISIBLE);
         }
     }

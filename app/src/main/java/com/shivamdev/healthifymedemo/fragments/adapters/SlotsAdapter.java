@@ -34,17 +34,17 @@ public class SlotsAdapter extends AbstractExpandableItemAdapter<MyGroupViewHolde
 
     @Override
     public int getChildCount(int groupPosition) {
-        return slotsData.size();
+        return slotsData.get(groupPosition).afternoon.size();
     }
 
     @Override
     public long getGroupId(int groupPosition) {
-        return 0;
+        return groupPosition;
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return 0;
+        return slotsData.get(groupPosition).afternoon.get(childPosition).slotId;
     }
 
     @Override
@@ -61,20 +61,26 @@ public class SlotsAdapter extends AbstractExpandableItemAdapter<MyGroupViewHolde
 
     @Override
     public void onBindGroupViewHolder(MyGroupViewHolder holder, int groupPosition, int viewType) {
-        //holder.tvDaySlot.setText(slotsData.);
-        holder.tvNoOfSlots.setText(slotsData.size());
+        holder.itemView.setClickable(true);
+        holder.tvDaySlot.setText("Afternoon");
+        holder.tvNoOfSlots.setText(slotsData.get(groupPosition).afternoon.size() + " Slots available");
     }
 
     @Override
     public void onBindChildViewHolder(MyChildViewHolder holder, int groupPosition, int childPosition, int viewType) {
         String startTime = slotsData.get(groupPosition).afternoon.get(childPosition).startTime;
         String endTime = slotsData.get(groupPosition).afternoon.get(childPosition).startTime;
-        holder.tvSlot.setText(startTime + " : " + endTime);
+        holder.tvSlot.setText("11:00AM" + " : " + "11:30AM");
     }
 
     @Override
     public boolean onCheckCanExpandOrCollapseGroup(MyGroupViewHolder holder, int groupPosition, int x, int y, boolean expand) {
-        return false;
+        // check is enabled
+        if (!(holder.itemView.isEnabled() && holder.itemView.isClickable())) {
+            return false;
+        }
+
+        return true;
     }
 }
 

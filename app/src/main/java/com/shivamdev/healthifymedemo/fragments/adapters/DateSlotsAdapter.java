@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.shivamdev.healthifymedemo.fragments.BookingSlotsFragment;
+import com.shivamdev.healthifymedemo.main.CommonUtils;
 import com.shivamdev.healthifymedemo.network.data.MyData;
 
 import java.util.ArrayList;
@@ -42,6 +43,6 @@ public class DateSlotsAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-       return  dateSlots.get(position).date;
+       return CommonUtils.convertDateToString(dateSlots.get(position).date, false);
     }
 }

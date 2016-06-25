@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -27,26 +28,31 @@ public class MyData {
             e.printStackTrace();
         }
     }
-    
+
     public List<Data> parseDates() {
         JSONObject dateSlots = null;
         List<Data> myData = new ArrayList<>();
         List<Slots> mySlots = new ArrayList<>();
         try {
             dateSlots = jsonObject.getJSONObject("slots");
-            for (int i = 0; i < dateSlots.length(); i++) {
-                String date = dateSlots.keys().next();
 
-                for (int j = 0; j < dateSlots.length(); j++) {
-                    Slots slot = GsonUtil.getInstance().getGson().fromJson(dateSlots.getJSONObject(date).toString(), Slots.class);
-                    mySlots.add(slot);
-                }
+            Iterator dates = dateSlots.keys();
 
+            while (dates.hasNext()) {
+                String date = (String) dates.next();
+
+                Slots slot = GsonUtil.getInstance().getGson().fromJson(dateSlots.getJSONObject(date).toString(), Slots.class);
+                mySlots.add(slot);
 
                 Data data = new Data();
                 data.date = date;
                 data.daySlots = mySlots;
                 myData.add(data);
+            }
+
+            for (int i = 0; i < dateSlots.length(); i++) {
+
+
             }
         } catch (JSONException e) {
             LogToast.log(TAG, "parseDates: catch : " + e);
@@ -79,5 +85,8 @@ public class MyData {
 
         @SerializedName("end_time")
         public String endTime;
+
+        @SerializedName("slot_id")
+        public int slotId;
     }
 }

@@ -48,12 +48,12 @@ public class BookingSlotsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        List<MyData.Slots> slots = getArguments().getParcelable(SLOTS);
+        List<MyData.Slots> slots = (List<MyData.Slots>) getArguments().getSerializable(SLOTS);
 
         rvSlots = (RecyclerView) view.findViewById(R.id.rv_slots);
-        //adapter = new SlotsAdapter(slots);
+        adapter = new SlotsAdapter(slots);
 
-        RecyclerViewExpandableItemManager expMgr = new RecyclerViewExpandableItemManager(null);
+        RecyclerViewExpandableItemManager expMgr = new RecyclerViewExpandableItemManager(savedInstanceState);
 
         rvSlots.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvSlots.setAdapter(expMgr.createWrappedAdapter(adapter));
