@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.shivamdev.healthifymedemo.fragments.BookingSlotsFragment;
-import com.shivamdev.healthifymedemo.network.data.SlotsData;
+import com.shivamdev.healthifymedemo.network.data.MyData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,26 +15,23 @@ import java.util.List;
  */
 public class DateSlotsAdapter extends FragmentPagerAdapter {
 
-    List<String> dateSlots;
-    List<SlotsData.Slots> slots;
+    List<MyData.Data> dateSlots;
 
     public DateSlotsAdapter(FragmentManager fm) {
         super(fm);
         dateSlots = new ArrayList<>();
-        slots = new ArrayList<>();
     }
 
-    public void refreshSlots(List<String> dates, List<SlotsData.Slots> slotsData) {
+    public void refreshSlots(List<MyData.Data> dates) {
         dateSlots.clear();
         dateSlots.addAll(dates);
-        slots.clear();
-        slots.addAll(slotsData);
+
         notifyDataSetChanged();
     }
 
     @Override
     public Fragment getItem(int position) {
-        BookingSlotsFragment slotsFragment = BookingSlotsFragment.newInstance(position, slots);
+        BookingSlotsFragment slotsFragment = BookingSlotsFragment.newInstance(position, dateSlots.get(position).daySlots);
         return slotsFragment;
     }
 
@@ -45,6 +42,6 @@ public class DateSlotsAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-       return  dateSlots.get(position);
+       return  dateSlots.get(position).date;
     }
 }

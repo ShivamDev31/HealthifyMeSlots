@@ -1,9 +1,8 @@
 package com.shivamdev.healthifymedemo.network;
 
-import com.google.gson.JsonElement;
-
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.QueryMap;
 import rx.Observable;
@@ -17,5 +16,5 @@ public interface HealthifyMeApi {
     // &api_key=a4aeb4e27f27b5786828f6cdf00d8d2cb44fe6d7&vc=276&expert_username=neha%40healthifyme.com&format=json
 
     @GET("/api/v1/booking/slots/all")
-    Observable<JsonElement> getSlots(@QueryMap Map<String, String>queryMap);
+    Observable<ResponseBody> getSlots(@QueryMap Map<String, String> queryMap);
 }

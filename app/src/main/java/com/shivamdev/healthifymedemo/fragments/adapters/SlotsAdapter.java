@@ -9,8 +9,9 @@ import android.widget.TextView;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemViewHolder;
 import com.shivamdev.healthifymedemo.R;
-import com.shivamdev.healthifymedemo.network.data.SlotsData;
+import com.shivamdev.healthifymedemo.network.data.MyData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,11 +19,12 @@ import java.util.List;
  */
 public class SlotsAdapter extends AbstractExpandableItemAdapter<MyGroupViewHolder, MyChildViewHolder> {
 
-    List<SlotsData.Slots> slotsData;
+    private List<MyData.Slots> slotsData;
 
-    public SlotsAdapter(List<SlotsData.Slots> slots) {
+    public SlotsAdapter(List<MyData.Slots> slots) {
         setHasStableIds(true);
-        slotsData = slots;
+        slotsData = new ArrayList<>();
+        slotsData.addAll(slots);
     }
 
     @Override
@@ -59,14 +61,14 @@ public class SlotsAdapter extends AbstractExpandableItemAdapter<MyGroupViewHolde
 
     @Override
     public void onBindGroupViewHolder(MyGroupViewHolder holder, int groupPosition, int viewType) {
-        //holder.tvDaySlot.setText(slotsData.get(0).afternoon.get(groupPosition));
-        holder.tvNoOfSlots.setText(slotsData.get(0).afternoon.size());
+        //holder.tvDaySlot.setText(slotsData.);
+        holder.tvNoOfSlots.setText(slotsData.size());
     }
 
     @Override
     public void onBindChildViewHolder(MyChildViewHolder holder, int groupPosition, int childPosition, int viewType) {
-        String startTime = slotsData.get(0).afternoon.get(childPosition).startTime;
-        String endTime = slotsData.get(0).afternoon.get(childPosition).endTime;
+        String startTime = slotsData.get(groupPosition).afternoon.get(childPosition).startTime;
+        String endTime = slotsData.get(groupPosition).afternoon.get(childPosition).startTime;
         holder.tvSlot.setText(startTime + " : " + endTime);
     }
 

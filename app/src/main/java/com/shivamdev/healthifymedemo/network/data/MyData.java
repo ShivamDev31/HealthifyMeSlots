@@ -1,21 +1,23 @@
 package com.shivamdev.healthifymedemo.network.data;
 
 import com.google.gson.annotations.SerializedName;
+import com.shivamdev.healthifymedemo.main.LogToast;
+import com.shivamdev.healthifymedemo.network.GsonUtil;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Shivam on 22-06-2016.
  */
+
 public class MyData {
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD");
+    private static final String TAG = MyData.class.getSimpleName();
+
     private JSONObject jsonObject;
 
     public void JsonParser(String json) {
@@ -26,37 +28,48 @@ public class MyData {
         }
     }
     
-    public List<Weather> parseWeather() throws JSONException, ParseException {
-        JSONArray slots = jsonObject.getJSONArray("slots");
-        for (int i = 0; i < slots.length(); i++) {
-            JSONObject jsonObject = slots.getJSONObject(i);
-            String date = jsonObject.keys().next();
-            JSONObject data = jsonObject.getJSONObject(date);
+    public List<Data> parseDates() {
+        JSONObject dateSlots = null;
+        List<Data> myData = new ArrayList<>();
+        List<Slots> mySlots = new ArrayList<>();
+        try {
+            dateSlots = jsonObject.getJSONObject("slots");
+            for (int i = 0; i < dateSlots.length(); i++) {
+                String date = dateSlots.keys().next();
 
-            Weather weather = new Weather();
-            weather.date = simpleDateFormat.parse(date);
-            weather.dayWeather = null; // gson code DayWeather
+                for (int j = 0; j < dateSlots.length(); j++) {
+                    Slots slot = GsonUtil.getInstance().getGson().fromJson(dateSlots.getJSONObject(date).toString(), Slots.class);
+                    mySlots.add(slot);
+                }
+
+
+                Data data = new Data();
+                data.date = date;
+                data.daySlots = mySlots;
+                myData.add(data);
+            }
+        } catch (JSONException e) {
+            LogToast.log(TAG, "parseDates: catch : " + e);
         }
-        return null;
+
+        return myData;
     }
 
-
-    public static class Weather {
-        private Date date;
-        private Slots dayWeather;
+    public static class Data {
+        public String date;
+        public List<Slots> daySlots;
     }
 
-
-    public static class Slots {
+    public static class Slots implements Serializable {
 
         @SerializedName("afternoon")
-        private TimingData[] afternoon;
+        public List<TimingData> afternoon;
 
         @SerializedName("evening")
-        private TimingData[] evening;
+        public List<TimingData> evening;
 
         @SerializedName("morning")
-        private TimingData[] morning;
+        public List<TimingData> morning;
     }
 
     public class TimingData {

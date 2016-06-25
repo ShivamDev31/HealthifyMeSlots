@@ -13,27 +13,25 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.gson.JsonElement;
 import com.shivamdev.healthifymedemo.R;
 import com.shivamdev.healthifymedemo.fragments.adapters.DateSlotsAdapter;
 import com.shivamdev.healthifymedemo.main.CommonUtils;
 import com.shivamdev.healthifymedemo.main.Constants;
 import com.shivamdev.healthifymedemo.main.LogToast;
 import com.shivamdev.healthifymedemo.main.MainApplication;
-import com.shivamdev.healthifymedemo.network.data.SlotsData;
+import com.shivamdev.healthifymedemo.network.data.MyData;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import okhttp3.ResponseBody;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-
 
 
 /**
@@ -116,7 +114,7 @@ public class BookingFragment extends Fragment {
         Subscription subs = MainApplication.getInstance().component().getHealthifyMeApi().getSlots(query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<JsonElement>() {
+                .subscribe(new Subscriber<ResponseBody>() {
                     @Override
                     public void onCompleted() {
 
@@ -129,33 +127,30 @@ public class BookingFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(JsonElement jsonObject) {
+                    public void onNext(ResponseBody responseBody) {
                         showLoader(false);
-                        String json = jsonObject.getAsString();
+                        String json = null;
+                        try {
+                            json = responseBody.string();
+                            setDataOnUi(json);
+                        } catch (IOException e) {
+                            LogToast.log(TAG, "onNext:catch " + e);
+                        }
                         LogToast.log(TAG, "onNext: " + json);
                     }
                 });
         compositeSubscription.add(subs);
     }
 
-    private void setDataOnUi(SlotsData json) {
-        Set<String> dateKeys = json.slots.keySet();
+    private void setDataOnUi(String json) {
 
-        tvMonth.setText(CommonUtils.convertDateToString((String) dateKeys.toArray()[0], true));
+        MyData myData = new MyData();
+        myData.JsonParser(json);
+        List<MyData.Data> dates = myData.parseDates();
 
-        List<String> dateSlots = new ArrayList<>();
-        List<SlotsData.Slots> slots = new ArrayList<>();
+        tvMonth.setText(CommonUtils.convertDateToString(dates.get(0).date, true));
 
-        for (String key : json.slots.keySet()) {
-            dateSlots.add(CommonUtils.convertDateToString(key, false));
-        }
-
-        for (int i = 0; i < json.slots.size(); i++) {
-            slots.add(json.slots.get(i));
-        }
-
-        adapter.refreshSlots(dateSlots, slots);
-
+        adapter.refreshSlots(dates);
     }
 
     private class RefreshData implements SwipeRefreshLayout.OnRefreshListener {
